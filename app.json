@@ -28,10 +28,16 @@
         "googleMaps": {
           "apiKey": "AIzaSyDVflVynDwXC9VygEoabRRpG5VVzwcyfOw"
         }
-      }
+      },
+      "package": "com.tchelobeast.rotas"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "99376fb9-05a1-49fe-b29e-52c93d98de66"
+      }
     }
   }
 }

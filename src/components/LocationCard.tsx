@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Location } from "../types/Location";
-import { formatCoordinates } from "../utils/formatLocation";
 import AppColors from "../constants/AppColors";
 
 type LocationCardProps = {
@@ -13,8 +12,9 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={location.image} style={styles.image} />
+      <Text style={styles.category}>{location.category}</Text>
       <Text style={styles.title}>{location.name}</Text>
-      <Text style={styles.subtitle}>{formatCoordinates(location)}</Text>
+      <Text style={styles.subtitle}>{location.address}</Text>
     </TouchableOpacity>
   );
 };
@@ -39,12 +39,21 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
+  category: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: AppColors.primary,
+    marginBottom: 4,
+    textTransform: "uppercase",
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
     color: AppColors.textPrimary,
+    marginBottom: 4,
   },
   subtitle: {
     color: AppColors.textSecondary,
+    fontSize: 14,
   },
 });

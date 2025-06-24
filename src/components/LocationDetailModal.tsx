@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Modal,
   View,
   Text,
   Image,
@@ -8,12 +7,11 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Location } from "../types/Location";
-import { formatCoordinatesVerbose } from "../utils/formatLocation";
 import MiniMap from "./MiniMap";
 import AppColors from "../constants/AppColors";
 import { X, MapPin } from "lucide-react-native";
+import Modal from "react-native-modal";
 
 type LocationDetailModalProps = {
   visible: boolean;
@@ -37,43 +35,38 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
 
   return (
     <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      isVisible={visible}
+      onBackdropPress={onClose}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      backdropTransitionOutTiming={0}
+      useNativeDriver
+      style={styles.modal}
     >
-      <View style={styles.overlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={onClose}>
-              <X size={30} color={AppColors.textPrimary} />
-            </TouchableOpacity>
-          </View>
+      <View style={styles.modalContent}>
 
-          <Image source={location.image} style={styles.image} />
-          <Text style={styles.title}>{location.name}</Text>
-          <Text style={styles.subtitle}>
-            {formatCoordinatesVerbose(location)}
-          </Text>
-
-          <MiniMap location={location} height={150} />
-
-          {/* Botão com gradiente */}
-          <TouchableOpacity
-            onPress={openInGoogleMaps}
-            style={styles.buttonWrapper}
-          >
-            <LinearGradient
-              colors={["#4285F4", "#34A853", "#FBBC05", "#EA4335"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.mapsButton}
-            >
-              <MapPin size={20} color="#fff" style={{ marginRight: 8 }} />
-              <Text style={styles.mapsButtonText}>Como Chegar</Text>
-            </LinearGradient>
+        <View style={styles.header}>
+          <Text style={styles.category}>{location.category}</Text>
+          <TouchableOpacity onPress={onClose}>
+            <X size={30} color={AppColors.textPrimary} />
           </TouchableOpacity>
         </View>
+
+        <Image source={location.image} style={styles.image} />
+        <Text style={styles.title}>{location.name}</Text>
+
+        <Text style={styles.subtitle}>{location.address}</Text>
+
+        <MiniMap location={location} height={150} />
+
+        <TouchableOpacity onPress={openInGoogleMaps} style={styles.buttonWrapper}>
+          <View style={styles.mapsButton}>
+            <MapPin size={20} color={AppColors.textPrimary} style={{ marginRight: 8 }} />
+            <Text style={[styles.mapsButtonText, { color: AppColors.textPrimary }]}>
+              Como Chegar
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -82,11 +75,10 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
 export default LocationDetailModal;
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+  modal: {
     justifyContent: "center",
     alignItems: "center",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: AppColors.cardBackground,
@@ -97,8 +89,17 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
-    alignItems: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 8,
+  },
+  category: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: AppColors.primary,
+    alignSelf: "flex-start",
+    marginBottom: 4,
   },
   image: {
     width: "100%",
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 4,
     color: AppColors.textPrimary,
   },
   subtitle: {
@@ -128,10 +129,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
+    gap: 8,
   },
   mapsButtonText: {
-    color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+    textAlign: "center",
   },
 });
